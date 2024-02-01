@@ -1,0 +1,6 @@
+{
+    "MODE": "OpenAI",
+    "OPENAI_API_KEY": "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",
+    "MODEL": "gpt-4-turbo-preview",
+    "VISION_MODEL": "gpt-4-vision-preview"
+}

@@ -1,0 +1,9 @@
+{
+    "root_dir": "..\\web-app",
+    "unwanted_dirs": ["node_modules", ".git", "dist", "build", "Generated"],
+    "important_files": [
+        {"name": "..\\web-app\\src\\App.tsx", "description": "Main app page"},
+        {"name": "..\\web-app\\src\\pages\\Home.tsx", "description": "Basic page example"},
+        {"name": "..\\web-app\\src\\store\\store.ts", "description": "Redux store"}
+    ]
+}
