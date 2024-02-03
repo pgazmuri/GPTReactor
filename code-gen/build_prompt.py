@@ -3,11 +3,13 @@ import json
 from codegen import choose_relevant_files
 from cg_utilities import strip_string_content
 
-# Define the root directory
-root_dir = "../packages/web-app"
+# Load the configuration file
+with open('cgconfig.json') as config_file:
+    config = json.load(config_file)
 
-# Define the unwanted directories
-unwanted_dirs = ['node_modules', '.git', 'dist', 'build']
+# Extract the variables from the configuration
+root_dir = config['root_dir']
+unwanted_dirs = config['unwanted_dirs']
 
 # Function to walk through the directory structure
 def walk_dir(dir_path, depth=0):
@@ -239,6 +241,6 @@ def build_orchestrator_prompt(base64_screen, screenshot_url, base64_comp, comp_p
         
         prompt.append({"type": "text", "text": f"You know about the context here, all the filenames and the relevant file contents of our stack. Start by analyzing relevant parts of the code base or code files and provide a high level overview of any issues or steps relevant to the request that you see. Then you will logically work through each issue or step and how to approach a fix or implementation for each based on the instruction set provided. \n\nCurrent NPM Build output:\n\n{npm_build_output}\n\n[END NPM OUTPUT]\n"})
         
-        prompt.append({"type": "text", "text": f"Finally, output the specific actions as shell script. Provide detailed instructions in user_request"});
+        prompt.append({"type": "text", "text": f"Finally, output the specific actions as bash script invoking only the allowed commands. Provide detailed instructions within user_request arguments."});
 
         return prompt

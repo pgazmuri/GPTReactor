@@ -23,7 +23,7 @@ import os
 
 config_file = 'config.json'
 if not os.path.exists(config_file):
-    mode = input("Which mode do you want to use? (OpenAI/Azure): ")
+    mode = input("Which mode do you want to use? (OpenAI/Azure/Local): ")
     if mode.lower() == "openai":
         OPENAI_API_KEY = input("Enter your OpenAI API Key: ")
         config = {
@@ -31,6 +31,14 @@ if not os.path.exists(config_file):
             "OPENAI_API_KEY": OPENAI_API_KEY,
             "MODEL": "gpt4-turbo-preview",
             "VISION_MODEL": "gpt4-vision-preview"
+        }
+    elif mode.lower() == "local":
+        OPENAI_BASE_URL = input("Enter your local http endpoint: ")
+        config = {
+            "MODE": "Local",
+            "BASE_URL": OPENAI_BASE_URL,
+            "MODEL": "doesnt-matter",
+            "VISION_MODEL": "doesnt-matter"
         }
     else:
         AZURE_OPENAI_KEY = input("Enter your Azure OpenAI Key: ")
@@ -55,6 +63,11 @@ else:
 if config["MODE"] == "OpenAI":
     client = OpenAI(
         api_key=config["OPENAI_API_KEY"]
+    )
+elif config["MODE"] == "Local":
+    client = OpenAI(
+        base_url=config["BASE_URL"],
+        api_key="doesntmatter"
     )
 else:
     client = AzureOpenAI(
@@ -133,28 +146,38 @@ def take_screenshot(url, screenshot_path):
     driver.quit()
 
 def take_and_encode_screenshot(screenshot_url: str) -> str:
-  screenshot_path = "./working/screen.png"
-  # Check if screenshot_path already exists and delete it if it does
-  if os.path.exists(screenshot_path):
-    os.remove(screenshot_path)
-  
-  # Take the screenshot
-  take_screenshot(screenshot_url, screenshot_path)
-  
-  # Check if screenshot_path exists before calling encode_image
-  if os.path.exists(screenshot_path):
-    # Getting the base64 string
-    base64_screen = encode_image(screenshot_path)
-    return base64_screen
-  else:
-    print("Error: screenshot failed")
-    return None
+    screenshot_directory = "./working"
+    screenshot_path = f"{screenshot_directory}/screen.png"
+
+    # Check if the screenshot directory exists, create it if it doesn't
+    if not os.path.exists(screenshot_directory):
+        os.makedirs(screenshot_directory)
+
+    # Check if screenshot_path already exists and delete it if it does
+    if os.path.exists(screenshot_path):
+        os.remove(screenshot_path)
+
+    # Take the screenshot
+    take_screenshot(screenshot_url, screenshot_path)
+
+    # Check if screenshot_path exists before calling encode_image
+    if os.path.exists(screenshot_path):
+        # Getting the base64 string
+        base64_screen = encode_image(screenshot_path)
+        return base64_screen
+    else:
+        print("Error: screenshot failed")
+        return None
 
 
-def get_npm_errors(build_directory):
+def get_npm_errors():
     try:
-        print(f"Running npm in {build_directory}")
-        output = subprocess.check_output(['npm.cmd', 'run', 'checkbuild'], cwd=build_directory, stderr=subprocess.STDOUT, universal_newlines=True)
+        
+        # Load the configuration file
+        with open('cgconfig.json') as config_file:
+            config = json.load(config_file)
+        print(f"Running npm in {config["root_dir"]}")
+        output = subprocess.check_output(['npm.cmd', 'run', 'checkbuild'], cwd=config["root_dir"], stderr=subprocess.STDOUT, universal_newlines=True)
 
         if "error" in output.lower():
             return output.strip()
@@ -231,24 +254,25 @@ def strip_string_content(string):
 def filter_command_output(command_output):
     # Define the patterns to search for
     patterns = [
-      r'^python \./cg_update_fix\.py .*',
-      r'^python \./cg_error_fix\.py .*',
-      r'^python \./cg_new_file\.py .*',
-      r'^python \./cg_comparison_fix\.py .*',
+        r'^python \./cg_update_fix\.py .*',
+        r'^python \./cg_error_fix\.py .*',
+        r'^python \./cg_new_file\.py .*',
+        r'^python \./cg_comparison_fix\.py .*',
+        r'^yarn add .*',
     ]
 
     # Split the command output into lines
     lines = command_output.split('\n')
 
-    # Initialize an empty list to hold the matching lines
-    matching_lines = []
+    # Initialize an empty set to hold the unique matching lines
+    unique_lines = set()
 
     # Check each line for a match with any of the patterns
     for line in lines:
-        if any(re.match(pattern, line) for pattern in patterns):
-            matching_lines.append(line)
+            if any(re.match(pattern, line) for pattern in patterns):
+                    unique_lines.add(line)
 
-    # Join the matching lines back into a single string
-    filtered_command_output = '\n'.join(matching_lines)
+    # Join the unique lines back into a single string
+    filtered_command_output = '\n'.join(unique_lines)
 
     return filtered_command_output

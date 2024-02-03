@@ -18,7 +18,7 @@ parser.add_argument("--comp_path", required=False, help="Path to the composite i
 parser.add_argument("--screenshot_url", required=False, help="URL for taking the screenshot")
 args = parser.parse_args()
   
-npm_build_output = get_npm_errors("../packages/web-app")
+npm_build_output = get_npm_errors()
 taskmaker_system_prompt = build_system_prompt("prompt_orchestrator.txt", args.user_request, npm_build_output)
 
 # Getting the base64 string for the comp
@@ -42,8 +42,10 @@ response = call_gpt(taskmaker_system_prompt, instruct_prompt)
 display_response(response)
 response_content = response.choices[0].message.content
 
+extract_regex = r'```(?:[Pp]owershell|[Bb]ash)\n(.*?)\n```'
+
 # Find all the commands
-matches = re.findall(r'```[pP]owershell+\n(.*?)\n```', response_content, re.DOTALL)
+matches = re.findall(extract_regex, response_content, re.DOTALL)
 
 # Combine all matches into a single string
 file_content = '\n'.join(matches)
@@ -61,8 +63,13 @@ else:
 #if validate_execution.lower() != 'y':
 #  sys.exit(0)
 
+# Ensure the directory exists
+working_dir_name = './working'
+if not os.path.exists(working_dir_name):
+  os.makedirs(working_dir_name)
+
 # Write the commands to a new PowerShell script
-with open('./working/command.ps1', 'w') as file:
+with open(os.path.join(working_dir_name, 'command.ps1'), 'w') as file:
   file.write(file_content)
 
 # Ask user if they wish to execute the orchestration command
@@ -78,11 +85,11 @@ else:
   sys.exit(0)
 
 # Check for errors, ask for a fix providing the original instructions as guidance for what was being attempted.
-errors = get_npm_errors("../packages/web-app")
-#check errors for the text "error" 
-if "Failed to compile." in errors:
-  #we have an error
-  #ask for a fix providing the original instructions as guidance for what was being attempted.
+errors = get_npm_errors()
+# Check errors for the text "error"
+if errors and "error" in errors:
+  # We have an error
+  # Ask for a fix providing the original instructions as guidance for what was being attempted.
   instruct_prompt = build_orchestrator_prompt(base64_screen, args.screenshot_url, base64_comp, args.comp_path, f"Intelligently fix the compilation failures shown in NPM build output. These failures were the result of the following instructions having been previously executed:\n\n{response_content}\n[END PREVIOUS INSTRUCTIONS] \n\nPlease fix the error in a way that honors the original request and plan. If the plan was flawed to begin with, come up with a better plan by thinking step by step and then generating the necessary commands. ", npm_build_output)
 else:
   exit()
@@ -94,7 +101,7 @@ display_response(response)
 response_content = response.choices[0].message.content
 
 # Find all the commands
-matches = re.findall(r'```[pP]owershell+\n(.*?)\n```', response_content, re.DOTALL)
+matches = re.findall(extract_regex, response_content, re.DOTALL)
 
 # Combine all matches into a single string
 file_content = '\n'.join(matches)

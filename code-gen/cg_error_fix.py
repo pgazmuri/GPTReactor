@@ -21,7 +21,7 @@ if not os.path.isfile(args.code_path):
   print("Error: The specified code file does not exist.")
   sys.exit(1)
 
-code_errors = get_npm_errors("../packages/web-app")
+code_errors = get_npm_errors()
 taskmaker_system_prompt = build_system_prompt("prompt_taskmaker.txt", args.user_request, code_errors)
 
 # Get the code contents
