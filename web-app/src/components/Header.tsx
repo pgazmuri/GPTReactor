@@ -22,36 +22,51 @@ const Header = () => {
   }, []);
 
   return (
-    <AppBar position="static" style={{ width: '100%', backgroundColor: '#1976d2', color: 'white', display: 'flex', justifyContent: 'center', padding: '6px 10px', alignItems: 'center' }}>
-      <Toolbar style={{ justifyContent: 'space-between', width: '100%', padding: '0 20px', marginRight: '20px', minHeight: '0px' }}>
-        {/* Search Bar */}
-        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', borderRadius: '5px', padding: '4px 8px', marginRight: '20px', flexGrow: 1, marginLeft: '20px', maxWidth: '500px' }}>
-          <SearchIcon style={{ color: '#1976d2', marginRight: '10px', width: '20px', height: '20px', marginLeft: '2px' }} />
-          <InputBase
-            placeholder="Search..."
-            style={{ padding: '6px 0px', width: '100%', border: 'none', outline: 'none', fontSize: '1rem' }}
-            inputProps={{ 'aria-label': 'search' }}
-          />
-        </div>
-
-        {/* Icon Group */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <IconButton aria-label="help" color="inherit" style={{ padding: '8px' }}>
-            <HelpOutlineIcon />
-          </IconButton>
-          <IconButton aria-label="account of current user" color="inherit" style={{ padding: '8px' }}>
-            <AccountCircleIcon />
-          </IconButton>
-          <IconButton aria-label="display more actions" color="inherit" style={{ padding: '8px' }}>
-            <MoreVertIcon />
-          </IconButton>
-          {/* Time Display */}
-          <div style={{ fontSize: '0.875rem', marginLeft: '16px', paddingLeft: '8px', paddingRight: '16px', whiteSpace: 'nowrap' }}>
-            {currentTime.toLocaleTimeString()}
+    <div style={{ width: '100%' }}>
+      <AppBar position="sticky" style={{ width: '100%', backgroundColor: '#1976d2', color: 'white', display: 'flex', justifyContent: 'center', padding: '6px 10px', alignItems: 'center', minHeight: '64px' }}>
+        <Toolbar style={{ justifyContent: 'space-between', width: '100%', padding: '0 20px', minHeight: '0px' }}>
+          {/* Search Bar */}
+          <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', borderRadius: '5px', padding: '4px 8px', marginRight: '20px', flexGrow: 1, marginLeft: '150px', maxWidth: '500px' }}>
+            <SearchIcon style={{ color: '#1976d2', marginRight: '10px', width: '20px', height: '20px', marginLeft: '2px' }} />
+            <InputBase
+              placeholder="Search..."
+              style={{ padding: '6px 0px', width: '100%', border: 'none', outline: 'none', fontSize: '1rem' }}
+              inputProps={{ 'aria-label': 'search' }}
+            />
           </div>
-        </div>
-      </Toolbar>
-    </AppBar>
+
+          {/* Icon Group */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            padding: '0 16px',
+            flex: 'none' // Prevents the div from growing or shrinking
+          }}>
+            <IconButton aria-label="help" color="inherit" style={{ padding: '8px' }}>
+              <HelpOutlineIcon />
+            </IconButton>
+            <IconButton aria-label="account of current user" color="inherit" style={{ padding: '8px' }}>
+              <AccountCircleIcon />
+            </IconButton>
+            <IconButton aria-label="display more actions" color="inherit" style={{ padding: '8px' }}>
+              <MoreVertIcon />
+            </IconButton>
+            {/* Time Display */}
+            <div style={{
+              fontSize: '0.875rem',
+              marginLeft: '16px',
+              paddingLeft: '8px',
+              paddingRight: '16px',
+              whiteSpace: 'nowrap',
+              flexShrink: 0 // Prevent the time display from shrinking
+            }}>
+              {currentTime.toLocaleTimeString()}
+            </div>
+          </div>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 };
 

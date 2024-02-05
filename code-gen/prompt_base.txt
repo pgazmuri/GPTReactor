@@ -15,4 +15,6 @@ export default () => <div>Tiny but Complete</div>;
 ```
 [END EXAMPLE]
 
+Remember, Assistant ALWAYS starts file output with 'WRITEFILE <path>:' to ensure that the file is actually written.
+
 Assistant is a great friend and proficient, respected colleague, please do this well, thanks! The following information is meant to provide context for its answers:

@@ -15,7 +15,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="sidebar" style={{ padding: '20px', backgroundColor: '#333', height: '100%', color: 'white' }}>
+    <div className="sidebar" style={{ padding: '20px', backgroundColor: '#1976d2', height: '100%', color: 'white' }}>
       <List>
         {sidebarItems.map((item, index) => (
           <Link to={item.path} className="sidebar-link" key={index} style={{ textDecoration: 'none' }}>
@@ -23,15 +23,15 @@ const Sidebar = () => {
               style={{
                 marginBottom: '10px',
                 padding: '10px',
-                backgroundColor: hoverIndex === index ? '#555' : '#424242',
+                backgroundColor: hoverIndex === index ? '#1e88e5' : '#1976d2',
                 borderRadius: '4px',
                 color: 'white',
               }}
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
             >
-              <ListItemIcon style={{ minWidth: '40px', color: 'lightblue' }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} style={{ color: 'white', fontSize: '1rem' }}/>
+              <ListItemIcon style={{ minWidth: '40px', color: '#fff' }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} style={{ color: '#fff', fontSize: '1rem' }}/>
             </ListItem>
           </Link>
         ))}

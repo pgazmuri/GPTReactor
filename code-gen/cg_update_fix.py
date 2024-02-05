@@ -61,11 +61,11 @@ display_response(response)
 response_content = response.choices[0].message.content
 
 # Find the writefile command
-writefile_command = re.search(r'WRITEFILE \'(.*?)\'', response_content)
+writefile_command = 1 #= re.search(r'WRITEFILE \'(.*?)\'', response_content)
 
 if writefile_command:
   # Get the file path from the writefile command
-  file_path = writefile_command.group(1)
+  file_path = args.code_path #writefile_command.group(1)
 
 
   # Find the content between the ticks

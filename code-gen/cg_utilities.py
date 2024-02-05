@@ -38,7 +38,9 @@ if not os.path.exists(config_file):
             "MODE": "Local",
             "BASE_URL": OPENAI_BASE_URL,
             "MODEL": "doesnt-matter",
-            "VISION_MODEL": "doesnt-matter"
+            "VISION_MODEL": "doesnt-matter",
+            "MAX_TEMP": 0.7,
+            "USE_INSTRUCT": 1,
         }
     else:
         AZURE_OPENAI_KEY = input("Enter your Azure OpenAI Key: ")
@@ -84,24 +86,49 @@ def call_gpt(system_prompt, user_prompt, max_tokens=4092, temperature=0.9, top_p
   enc = tiktoken.encoding_for_model("gpt-4")
   encoded = enc.encode(system_prompt + get_content_from_text_object_array(user_prompt))
   total_tokens = len(encoded)
+
+
+  if config.get("MAX_TEMP") and temperature > config["MAX_TEMP"]:
+    temperature = config["MAX_TEMP"]
+
+  compiled_messages = [
+                {
+                    "role": "system",
+                    "content": [
+                        {"type": "text", "text": system_prompt}
+                    ],
+                },
+                {
+                    "role": "user",
+                    "content": user_prompt
+                }
+            ]
+
+  if config["MODE"] == "Local":
+    
+    prompt_text = user_prompt if isinstance(user_prompt, str) else get_content_from_text_object_array(user_prompt)
+    
+    if config.get("USE_INSTRUCT") and config["USE_INSTRUCT"] == 1:
+        prompt_text = "[INST] " + prompt_text + " [/INST]"
+
+    compiled_messages = [
+                {
+                    "role": "system",
+                    "content": system_prompt,
+                },
+                {
+                    "role": "user",
+                    "content": prompt_text,
+                }
+            ]
+
   print(f"Calling GPT {"with vision" if use_vision else "without vision"} with total (text) tokens: {total_tokens}")
   max_retries = 5
   for i in range(max_retries):
         try:
             response = client.chat.completions.create(
                 model=config["VISION_MODEL"] if use_vision else config["MODEL"],
-                messages=[
-                    {
-                        "role": "system",
-                        "content": [
-                            {"type": "text", "text": system_prompt}
-                        ],
-                    },
-                    {
-                        "role": "user",
-                        "content": user_prompt
-                    }
-                ],
+                messages=compiled_messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
                 top_p=top_p,
@@ -176,7 +203,7 @@ def get_npm_errors():
         # Load the configuration file
         with open('cgconfig.json') as config_file:
             config = json.load(config_file)
-        print(f"Running npm in {config["root_dir"]}")
+        print(f"Running tsc (typescript compiler) to check for errors in {config["root_dir"]}")
         output = subprocess.check_output(['npm.cmd', 'run', 'checkbuild'], cwd=config["root_dir"], stderr=subprocess.STDOUT, universal_newlines=True)
 
         if "error" in output.lower():
