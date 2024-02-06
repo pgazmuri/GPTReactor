@@ -2,7 +2,7 @@
 
 GPTReactor is a demonstration project that uses GPT4 Turbo (with or without Vision) to generate a React UI from natural language instructions and images. The project aims to explore the potential of AI in automating and simplifying the process of building user interfaces. The project supports the OpenAI API via Azure OpenAI, or direct to OpenAI. Using Azure OpenAI generally allows for higher quota/throughput. You may also use any local llms that support the OpenAI api format.
 
-There are two top folders in the repository: code-gen and web-app.  code-gen contains python code to generate React wqeb app code using GPT. web-app contains the React web app itself, a simple app built using Vite using React + Typescript using SWC (superfast web compiler).
+There are two top folders in the repository: code-gen and web-app.  code-gen contains python code to generate React web app code using GPT. web-app contains the React web app itself, a simple app built using Vite using React + Typescript using SWC (superfast web compiler).
 
 ## Getting Started
 
@@ -45,9 +45,9 @@ GPTReactor's basic empty web application should now be running. You can view the
 
 Open a second terminal and navigate to the GPTReactor/code-gen directory. Run the following command to install the Python dependencies:
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
 You are now ready to run GPTReactor. Try the following script:
 
@@ -155,5 +155,10 @@ I intentionally wanted the python code to be as simple as possible for transpare
 ## Future Work
 This demonstration project is just that, a demonstration. GPT compute is sufficiently expensive that performing proper evaluation at scale to validate improvements is cost prohibitive. At the same time, there is plenty of low-hanging fruit in terms of potential improvements and optimizations. If there is any interest in further refining this tool, I would recommend:
 
-* Cleaning up console output to be more useful
-* Improving prompts with additional examples
+* Improve logging and error handling
+* Clean up console output to be more useful
+* Improve prompts with additional examples
+* Set up an evaluation pipeline to properly evaluate prompt effectiveness (this is costly)
+* Generally test various use cases and review completions to understand failure modes and potential mitigations
+* Generally improve the base React app stack to include a more complete set of non-functional and cross-functional conventions/libraries
+* Extend to support full stack integration of some kind
