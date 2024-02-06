@@ -125,7 +125,7 @@ The output from one run of this command was the following, you can see the logic
 
 ```bash
 python ./cg_new_file.py --user_request "Create a report store file named reportStore.ts in the store directory. Add mock data that includes various metrics to be displayed on the report page, such as bar chart data, pie chart data, and statistics." --code_path ../web-app/src/store/reportStore.ts
-python ./cg_new_file.py --user_request "Create a Reports page component named Reports.tsx in the pages directory. This component should include placeholders for the different charts and metrics that will match the comp as closely as possible, utilizing inline styles and MUI components where helpful." --code_path ../web-app/src/pages/Reports/Reports.tsx --comp_path ./examples/reports.jpg
+python ./cg_new_file.py --user_request "Create a Reports page component named Reports.tsx in the pages directory. This component should include placeholders for the different charts and metrics that will match the comp as closely as possible, utilizing inline styles and MUI components where helpful." --code_path ../web-app/src/pages/Reports/Reports.tsx --comp_path ./examples/report.png
 python ./cg_update_fix.py --user_request "Add a new Route within the Router component in App.tsx for the Reports page. The path should be '/reports' and the element should be the newly created Reports component." --code_path ../web-app/src/App.tsx
 python ./cg_update_fix.py --user_request "Add a new sidebar item for the Reports page with a corresponding icon and text, 'Reports'. The path should be '/reports'." --code_path ../web-app/src/components/Sidebar.tsx  
 ```
@@ -133,7 +133,7 @@ python ./cg_update_fix.py --user_request "Add a new sidebar item for the Reports
 If the output still needs improvement (and it often does):
 
 ```bash
-python cg_orchestrate_update.py --user_request "Update the report page to better match the comp. use or improve the mock data in reportstore. import additional libraries as needed to ensure you can display the charts and graphs and indicators needed." --comp_path ./examples/reports.jpg --screenshot_url http://localhost:5173/reports
+python cg_orchestrate_update.py --user_request "Update the report page to better match the comp. use or improve the mock data in reportstore. import additional libraries as needed to ensure you can display the charts and graphs and indicators needed." --comp_path ./examples/report.png --screenshot_url http://localhost:5173/reports
 ```
 
 Again, be sure to replace the screenshot url with your currently running dev url.
@@ -150,7 +150,7 @@ Though it would help, this call doesn’t need to include details about compile 
 
 Why didn't you use LangChan/Semantic Kernel/Prompt Flow, etc...?
 
-I intentionally wanted the python code to be as simple as possible for transparency/ease of understanding by React devs and others not familiar with these frameworks. I myself am not particularly familiar with python and it's conventions, but chose python as it's the default stack for AI, benefiting from the most comprehensive ecosystem while keeping the solution 'agnostic' in terms of potential stacks and languages that it can operate against. Consequently, the current set of scripts could be easily ported to Typescript as is to better fit within the React ecosystem.
+I intentionally wanted the python code to be as simple as possible for transparency/ease of understanding by React devs and others not familiar with these frameworks. I myself am not particularly familiar with python and it's conventions, but chose python as it's the default stack for AI, benefiting from the most comprehensive ecosystem while keeping the solution 'agnostic' in terms of potential stacks and languages that it can operate against. Consequently, the current set of scripts could be easily ported to Typescript to better fit within the React ecosystem.
 
 ## Future Work
 This demonstration project is just that, a demonstration. GPT compute is sufficiently expensive that performing proper evaluation at scale to validate improvements is cost prohibitive. At the same time, there is plenty of low-hanging fruit in terms of potential improvements and optimizations. If there is any interest in further refining this tool, I would recommend:
