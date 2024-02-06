@@ -291,13 +291,15 @@ def filter_command_output(command_output):
     # Split the command output into lines
     lines = command_output.split('\n')
 
-    # Initialize an empty set to hold the unique matching lines
-    unique_lines = set()
+    # Initialize an empty list to hold the unique matching lines
+    unique_lines = []
 
     # Check each line for a match with any of the patterns
     for line in lines:
-            if any(re.match(pattern, line) for pattern in patterns):
-                    unique_lines.add(line)
+        if any(re.match(pattern, line) for pattern in patterns):
+            # Only add the line if it's not already in the list
+            if line not in unique_lines:
+                unique_lines.append(line)
 
     # Join the unique lines back into a single string
     filtered_command_output = '\n'.join(unique_lines)

@@ -78,7 +78,7 @@ def choose_relevant_files(user_request, npm_build_output=None):
                 ]
     
     if npm_build_output:
-        user_content.append({"type": "text", "text": f"\n\nThe npm build output is:\n{npm_build_output}"})
+        user_content.append({"type": "text", "text": f"\n\nThe typescript build output is:\n{npm_build_output}"})
 
     response = call_gpt(f"Assistant is an AI specialized expert coder. Assistant is meticulous and will not make mistakes. Assistant is most skilled at determining which files are relevant for a given task. Assistant will include any files with errors, unless the files are so numerous that the error lies in a more central location. Assistant will make a best guess as to what files are appropriate to include. Assistant always responds with only a list of file paths, and list of filepaths only.",
                         user_content,

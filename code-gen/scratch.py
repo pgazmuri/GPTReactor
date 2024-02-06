@@ -1,10 +1,15 @@
+import re
 
+config = "../web-app"
+file_content = "yarn add react react-dom react-scripts\npython .\script.py"
 
-import tiktoken
-from cg_utilities import get_npm_errors
+revised_file_content = ""
+for line in file_content.split("\n"):
+    if line.startswith("yarn"):
+        revised_file_content += f"cd {config}\n"
+    revised_file_content += line + "\n"
+    if line.startswith("yarn"):
+        revised_file_content += "cd ../code-gen\n"
 
-enc = tiktoken.encoding_for_model("gpt-4")
-encoded = enc.encode("Hello world, let's test tiktoken.")
-total_tokens = len(encoded)
+print(revised_file_content)
 
-print(total_tokens)

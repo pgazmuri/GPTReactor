@@ -154,7 +154,7 @@ def build_new_instruct_prompt(base64_comp, filename, user_request=None):
 
 def build_error_instruct_prompt(filename, current_code_contents=None, user_request=None):
         prompt = [
-                {"type": "text", "text": f"We need help!\nSomething is wrong with {filename}, we are seeing a failure in the npm build output."},
+                {"type": "text", "text": f"We need help!\nSomething is wrong with {filename}, we are seeing a failure in the typescript build output."},
                 {"type": "text", "text": f"Provide detailed instructions for an expert coder to implement fixes required for {filename}. You will be attentive to ensuring coder is aware of all the necessary pieces, but you will not write the component directly for coder. Instead you will logically work through each error and how to approach a fix for each, thinking through how the page or component fits within it's broader context. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about how to alter the file itself.  If the issue is that the app can't resolve a css file, remove the reference to that file."},
         ]
 
@@ -239,7 +239,7 @@ def build_orchestrator_prompt(base64_screen, screenshot_url, base64_comp, comp_p
                 prompt.append({"type": "text", "text": f"We need help!\nWe are working to improve this code base, it surely needs work, and you are the right person for the job. Specifically, {user_request}"})
 
         
-        prompt.append({"type": "text", "text": f"You know about the context here, all the filenames and the relevant file contents of our stack. Start by analyzing relevant parts of the code base or code files and provide a high level overview of any issues or steps relevant to the request that you see. Then you will logically work through each issue or step and how to approach a fix or implementation for each based on the instruction set provided. \n\nCurrent NPM Build output:\n\n{npm_build_output}\n\n[END NPM OUTPUT]\n"})
+        prompt.append({"type": "text", "text": f"You know about the context here, all the filenames and the relevant file contents of our stack. Start by analyzing relevant parts of the code base or code files and provide a high level overview of any issues or steps relevant to the request that you see. Then you will logically work through each issue or step and how to approach a fix or implementation for each based on the instruction set provided. \n\nCurrent typescript build output:\n\n{npm_build_output}\n\n[END NPM OUTPUT]\n"})
         
         prompt.append({"type": "text", "text": f"Finally, output the specific actions as bash script invoking only the allowed commands. Provide detailed instructions within user_request arguments."});
 

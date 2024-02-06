@@ -99,7 +99,7 @@ errors = get_npm_errors()
 if errors and "error" in errors:
   # We have an error
   # Ask for a fix providing the original instructions as guidance for what was being attempted.
-  instruct_prompt = build_orchestrator_prompt(base64_screen, args.screenshot_url, base64_comp, args.comp_path, f"Intelligently fix the compilation failures shown in NPM build output. These failures were the result of the following instructions having been previously executed:\n\n{response_content}\n[END PREVIOUS INSTRUCTIONS] \n\nPlease fix the error in a way that honors the original request and plan. If the plan was flawed to begin with, come up with a better plan by thinking step by step and then generating the necessary commands. ", npm_build_output)
+  instruct_prompt = build_orchestrator_prompt(base64_screen, args.screenshot_url, base64_comp, args.comp_path, f"Intelligently fix the compilation failures shown in Typescript build output. These failures were the result of the following instructions having been previously executed:\n\n{response_content}\n[END PREVIOUS INSTRUCTIONS] \n\nPlease fix the error in a way that honors the original request and plan. If the plan was flawed to begin with, come up with a better plan by thinking step by step and then generating the necessary commands. ", npm_build_output)
 else:
   exit()
 

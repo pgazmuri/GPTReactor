@@ -99,15 +99,27 @@ Each action internally triggers multiple GenAI calls:
 
 The `cg_orchestrate_update.py` script in GPTReactor coordinates changes across multiple files. It first builds a prompt for the GPT model using various inputs such as a screenshot (optional), a comp (UI mockup) path (optional), a user request, and typescript build output. The prompt is then sent to the GPT model, which returns a set of instructions. These instructions are parsed and filtered to extract the commands provided by the GPT model. These commands, once confirmed by the user, are then executed to perform the necessary updates to the files (pass --skip_confirm if you wish). If you do not provide a screenshot_url or comp_path, the vision model will not be used.
 
-If there are any errors in the npm build output after the command execution, the script builds a new orchestrator prompt that includes the original instructions and a request to fix the errors. This prompt is sent to the GPT model, which returns a set of instructions to fix the errors.
+If there are any errors in the typescript build output after the command execution, the script builds a new orchestrator prompt that includes a request to fix the errors. This prompt is sent to the GPT model, which returns a set of instructions to fix the errors.
 
 ### Example of executing the orchestrator:
 
-An example user_registration.png UI comp is provided so you can try this:
+An example user_registration.png UI comp is provided:
+
+![User Registration Comp](./examples/user_registration.png)
+
+This comp path can be passed to the orchestrate or comparison scripts, so you can try something like this:
 
 ```bash
 python cg_orchestrate_update.py --user_request "Build a user registration page based on the provided comp. When the form is submitted, update the name and email in the userstore. Use the route /register and add a sidebar menu item." --comp_path ./examples/user_registration.png
 ```
+
+The output from one run of this command when tested yielded the following UI:
+
+![GPT Created User Registration Screen](./examples/GPTReactor_Created_user_registration.png)
+
+As you can see, the form matches the comp relatively closely, but is not a perfect match. There are limitations to this approach and to GPT4's ability to "see" and match a comp exactly.
+
+If successful, submitting the registration form and then going to the home page, you should see your name displayed, showing that redux store integration was completed as part of the task.
 
 If you want to update the page after it's created (replace the screenshot url with your currently running dev url):
 
@@ -115,10 +127,15 @@ If you want to update the page after it's created (replace the screenshot url wi
 python cg_orchestrate_update.py --user_request "Update the user registration page to ensure the form is left aligned and to better match the comp" --comp_path ./examples/user_registration.png --screenshot_url http://localhost:5173/register
 ```
 
-Try this example, where we use a report mockup image to generate code for a report:
+Next, you can try using the example comp image for a report UI:
+
+
+![Report Comp](./examples/report.png)
+
+Here's how we use a report mockup image to generate code for a report page:
 
 ```bash
-python cg_orchestrate_update.py --user_request "Build a report page to match the comp. Mock the data in a reportStore. Add a link to the sidebar." --comp_path ./examples/report.png
+python cg_orchestrate_update.py --user_request "Build a report page to match the comp. The route should be /reports.  Mock the data in a reportStore. Add a link to the sidebar." --comp_path ./examples/report.png
 ```
 
 The output from one run of this command was the following, you can see the logical structure of the commands and how the comp path is passed on to create the reports page:
@@ -133,10 +150,14 @@ python ./cg_update_fix.py --user_request "Add a new sidebar item for the Reports
 If the output still needs improvement (and it often does):
 
 ```bash
-python cg_orchestrate_update.py --user_request "Update the report page to better match the comp. use or improve the mock data in reportstore. import additional libraries as needed to ensure you can display the charts and graphs and indicators needed." --comp_path ./examples/report.png --screenshot_url http://localhost:5173/reports
+python cg_orchestrate_update.py --user_request "Update the report page to better match the comp. use or improve the mock data in reportstore." --comp_path ./examples/report.png --screenshot_url http://localhost:5173/reports
 ```
 
 Again, be sure to replace the screenshot url with your currently running dev url.
+
+The output from one run of this command, followed by a few rounds of update commands, yielded the following UI:
+
+![GPT Created User Registration Screen](./examples/GPTReactor_Created_report.png)
 
 To fix compilation errors:
 
