@@ -33,7 +33,7 @@ if not os.path.exists(config_file):
             "VISION_MODEL": "gpt4-vision-preview"
         }
     elif mode.lower() == "local":
-        OPENAI_BASE_URL = input("Enter your local http endpoint: ")
+        OPENAI_BASE_URL = input("Enter your local http endpoint URL (ending in /v1): ")
         config = {
             "MODE": "Local",
             "BASE_URL": OPENAI_BASE_URL,
@@ -44,10 +44,10 @@ if not os.path.exists(config_file):
         }
     else:
         AZURE_OPENAI_KEY = input("Enter your Azure OpenAI Key: ")
-        AZURE_OPENAI_VERSION = input("Enter your Azure OpenAI Version: ")
-        AZURE_OPENAI_ENDPOINT = input("Enter your Azure OpenAI Endpoint: ")
-        AZURE_OPENAI_MODEL = input("Enter your Azure OpenAI Model: ")
-        AZURE_OPENAI_VISION_MODEL = input("Enter your Azure OpenAI Vision Model: ")
+        AZURE_OPENAI_VERSION = "2023-07-01-preview"
+        AZURE_OPENAI_ENDPOINT = input("Enter your Azure OpenAI Endpoint: (e.g. https://your-instance.openai.azure.com/)")
+        AZURE_OPENAI_MODEL = input("Enter your Azure OpenAI Model (the name of your deployment): ")
+        AZURE_OPENAI_VISION_MODEL = input("Enter your Azure OpenAI Vision Model (the name of your deployment): ")
         config = {
             "MODE": "Azure",
             "AZURE_OPENAI_KEY": AZURE_OPENAI_KEY,

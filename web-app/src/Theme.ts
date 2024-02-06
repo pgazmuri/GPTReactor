@@ -3,11 +3,11 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2', // Blue color used in buttons, you may need to use a color picker tool to get the exact color from the design comp.
-      contrastText: '#fff', // Assuming buttons have white text.
+      main: '#F9D59B', // Example pastel color, replace with the exact color from the design comp
+      contrastText: '#fff',
     },
     secondary: {
-      main: '#9e9e9e', // Gray color for less prominent elements, adjust the shade as needed.
+      main: '#F3B27A', // Example pastel color, replace with the exact color from the design comp
     },
     background: {
       default: '#f5f5f5', // Background color for the main content area.
@@ -29,6 +29,7 @@ const theme = createTheme({
     button: {
       textTransform: 'none', // The buttons in the design don't seem to have uppercase text.
     },
+    // Add new typography styles based on the design comp
     //... other variants
   },
   components: {
@@ -42,6 +43,7 @@ const theme = createTheme({
       },
     },
     // Add overrides for other MUI components as needed to match the design comp.
+    // Add new component styles based on the design comp
   },
 });
 

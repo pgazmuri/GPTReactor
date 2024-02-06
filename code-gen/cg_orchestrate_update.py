@@ -65,13 +65,18 @@ working_dir_name = './working'
 if not os.path.exists(working_dir_name):
   os.makedirs(working_dir_name)
 
-
-# Replace "yarn add ..." lines in file_content and wrap with "(cd ../web-app && yarn add ...)"
-file_content = re.sub(r"yarn add .*", r"(cd " + config["root_dir"] + r" && \g<0>)", file_content)
+revised_file_content = ""
+# Check for "yarn add ..." lines in file_content and cd to the web app directory before running the command
+for line in file_content.split("\n"):
+    if line.startswith("yarn"):
+        revised_file_content += f"cd {config["root_dir"]}\n"
+    revised_file_content += line + "\n"
+    if line.startswith("yarn"):
+        revised_file_content += "cd ../code-gen\n"
 
 # Write the commands to a new PowerShell script
 with open(os.path.join(working_dir_name, 'command.ps1'), 'w') as file:
-  file.write(file_content)
+  file.write(revised_file_content)
 
 # Ask user if they wish to execute the orchestration command
 if not args.skip_confirm:
@@ -118,22 +123,18 @@ else:
   print("Error: No file content found in response.")
   sys.exit(1)
 
-
-# Replace "yarn add ..." lines in file_content and wrap with "(cd ../web-app && yarn add ...)"
-file_content = re.sub(r"yarn add .*", r"(cd " + config["root_dir"] + r" && \g<0>)", file_content)
-
-# Write the commands to a new PowerShell script
-with open('./working/command.ps1', 'w') as file:
-  file.write(file_content)
-
-# Run the PowerShell script
-command_output = os.system('powershell.exe -File ./working/command.ps1 > ./working/error_fix_commandoutput.txt')
-print("Execution completed. Error fixing command output written to ./working/error_fix_commandoutput.txt.")
-
+revised_file_content = ""
+# Check for "yarn add ..." lines in file_content and cd to the web app directory before running the command
+for line in file_content.split("\n"):
+    if line.startswith("yarn"):
+        revised_file_content += f"cd {config["root_dir"]}\n"
+    revised_file_content += line + "\n"
+    if line.startswith("yarn"):
+        revised_file_content += "cd ../code-gen\n"
 
 # Write the commands to a new PowerShell script
 with open('./working/command.ps1', 'w') as file:
-  file.write(file_content)
+  file.write(revised_file_content)
 
 # Run the PowerShell script
 command_output = os.system('powershell.exe -File ./working/command.ps1 > ./working/error_fix_commandoutput.txt')

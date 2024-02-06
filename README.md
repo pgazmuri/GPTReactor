@@ -2,7 +2,7 @@
 
 GPTReactor is a demonstration project that uses GPT4 Turbo (with or without Vision) to generate a React UI from natural language instructions and images. The project aims to explore the potential of AI in automating and simplifying the process of building user interfaces. The project supports the OpenAI API via Azure OpenAI, or direct to OpenAI. Using Azure OpenAI generally allows for higher quota/throughput. You may also use any local llms that support the OpenAI api format.
 
-There are two top folders in the repository: code-gen and web-app.  code-gen contains python code to generate React web app code using GPT. web-app contains the React web app itself, a simple app built using Vite using React + Typescript using SWC (superfast web compiler).
+There are two top folders in the repository: /code-gen and /web-app. /web-app contains a React project, a simple web app built using Vite using React + Typescript using SWC (superfast web compiler). /code-gen contains python scripts that can be used to alter that React web app code with GPT. 
 
 ## Getting Started
 
@@ -17,10 +17,10 @@ There are two top folders in the repository: code-gen and web-app.  code-gen con
     npm install --global yarn
     ```
 
-3. Clone the GPTReactor project from GitHub. Replace `your-github-url` with the URL of your GitHub repository:
+3. Clone the GPTReactor project from GitHub:
 
     ```bash
-    git clone your-github-url
+    git clone https://github.com/pgazmuri/GPTReactor
     ```
 
 4. Navigate to the `/web-app` directory in the GPTReactor project:
@@ -115,10 +115,10 @@ If you want to update the page after it's created (replace the screenshot url wi
 python cg_orchestrate_update.py --user_request "Update the user registration page to ensure the form is left aligned and to better match the comp" --comp_path ./examples/user_registration.png --screenshot_url http://localhost:5173/register
 ```
 
-Try this example, where we use an AI generated report image to generate code for a report:
+Try this example, where we use a report mockup image to generate code for a report:
 
 ```bash
-python cg_orchestrate_update.py --user_request "Build a report page to match the comp as much as possible. Mock the data in a reportStore. Add a link to the sidebar" --comp_path ./examples/reports.jpg
+python cg_orchestrate_update.py --user_request "Build a report page to match the comp. Mock the data in a reportStore. Add a link to the sidebar." --comp_path ./examples/report.png
 ```
 
 The output from one run of this command was the following, you can see the logical structure of the commands and how the comp path is passed on to create the reports page:
