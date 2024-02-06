@@ -103,7 +103,7 @@ if errors and "error" in errors:
 else:
   exit()
 
-print(f"\nAttempting to fix remaining errors...")
+print(f"\nErrors found in typescript build...\n\nAttempting to fix remaining errors...")
 response = call_gpt(taskmaker_system_prompt, instruct_prompt)
 
 display_response(response)
@@ -132,12 +132,20 @@ for line in file_content.split("\n"):
     if line.startswith("yarn"):
         revised_file_content += "cd ../code-gen\n"
 
-# Write the commands to a new PowerShell script
-with open('./working/command.ps1', 'w') as file:
-  file.write(revised_file_content)
 
-# Run the PowerShell script
-command_output = os.system('powershell.exe -File ./working/command.ps1 > ./working/error_fix_commandoutput.txt')
-print("Execution completed. Error fixing command output written to ./working/error_fix_commandoutput.txt.")
+# Ask user if they wish to execute the orchestration command
+if not args.skip_confirm:
+  execute_orchestration = input("Do you wish to execute the orchestration commands to fix the errors? (y/n): ")
+else:
+  execute_orchestration = 'y'
+
+if execute_orchestration.lower() == 'y':
+  # Write the commands to a new PowerShell script
+  with open('./working/command.ps1', 'w') as file:
+    file.write(revised_file_content)
+
+  # Run the PowerShell script
+  command_output = os.system('powershell.exe -File ./working/command.ps1 > ./working/error_fix_commandoutput.txt')
+  print("Execution completed. Error fixing command output written to ./working/error_fix_commandoutput.txt.")
 
 

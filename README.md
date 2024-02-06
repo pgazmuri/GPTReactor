@@ -105,7 +105,7 @@ If there are any errors in the typescript build output after the command executi
 
 An example user_registration.png UI comp is provided:
 
-![User Registration Comp](./examples/user_registration.png)
+![User Registration Comp](examples/user_registration.png)
 
 This comp path can be passed to the orchestrate or comparison scripts, so you can try something like this:
 
@@ -115,7 +115,7 @@ python cg_orchestrate_update.py --user_request "Build a user registration page b
 
 The output from one run of this command when tested yielded the following UI:
 
-![GPT Created User Registration Screen](./examples/GPTReactor_Created_user_registration.png)
+![GPT Created User Registration Screen](examples/GPTReactor_Created_user_registration.png)
 
 As you can see, the form matches the comp relatively closely, but is not a perfect match. There are limitations to this approach and to GPT4's ability to "see" and match a comp exactly.
 
@@ -130,7 +130,7 @@ python cg_orchestrate_update.py --user_request "Update the user registration pag
 Next, you can try using the example comp image for a report UI:
 
 
-![Report Comp](./examples/report.png)
+![Report Comp](examples/report.png)
 
 Here's how we use a report mockup image to generate code for a report page:
 
@@ -157,7 +157,7 @@ Again, be sure to replace the screenshot url with your currently running dev url
 
 The output from one run of this command, followed by a few rounds of update commands, yielded the following UI:
 
-![GPT Created User Registration Screen](./examples/GPTReactor_Created_report.png)
+![GPT Created User Registration Screen](examples/GPTReactor_Created_report.png)
 
 To fix compilation errors:
 
