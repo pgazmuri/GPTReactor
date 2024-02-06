@@ -59,7 +59,7 @@ else:
 
 
 
-system_prompt = build_system_prompt("prompt_base.txt", instructions) 
+system_prompt = build_system_prompt("prompt_coder.txt", instructions) 
 code_contents = code_contents if code_contents not in system_prompt else None
 user_prompt = build_compare_prompt(base64_screen, base64_comp, args.code_path, code_contents, instructions)
 

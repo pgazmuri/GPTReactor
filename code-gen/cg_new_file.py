@@ -35,7 +35,7 @@ if not args.skip_instruct:
   instructions = response.choices[0].message.content
 else:
   instructions = args.user_request
-system_prompt = build_system_prompt("prompt_base.txt", instructions) 
+system_prompt = build_system_prompt("prompt_coder.txt", instructions) 
 user_prompt = build_code_prompt(base64_comp, args.code_path, instructions)
 
 print("Calling GPT4 Vision for code...")

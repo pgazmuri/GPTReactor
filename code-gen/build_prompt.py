@@ -88,7 +88,7 @@ def build_compare_prompt(base64_screen, base64_comp, filename, current_code_cont
         ]
 
         if user_request is not None:
-                prompt.append({"type": "text", "text": f"Accordingly, please review the following suggestions from a UX and React expert colleague, and implement these changes as described:\n {user_request}"})
+                prompt.append({"type": "text", "text": f"Accordingly, please review the following suggestions from an expert colleague, and implement these changes as described:\n {user_request}"})
 
         if current_code_contents is not None:
                 prompt.append({"type": "text", "text": f"Current contents of {filename} is: \n\n{current_code_contents}\n[EOF]\n\n"})
@@ -105,14 +105,14 @@ def build_instruct_prompt(base64_screen, base64_comp, filename, current_code_con
                         "url": f"data:image/jpeg;base64,{base64_comp}",
                     },
                 },
-                {"type": "text", "text": f"The current output of {filename} from the current React code is:"},
+                {"type": "text", "text": f"The current screenshot of {filename} from the current codebase is:"},
                 {
                     "type": "image_url",
                     "image_url": {
                         "url": f"data:image/jpeg;base64,{base64_screen}",
                     },
                 },
-        {"type": "text", "text": f"Critique and list the differences between these outputs and provide detailed instructions for an expert React coder to update the current version of {filename}. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about the intended structure of the file itself."},
+        {"type": "text", "text": f"Critique and list the differences between these outputs and provide detailed instructions for an expert coder to update the current version of {filename}. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about the intended structure of the file itself."},
         ]
 
         if user_request is not None:
@@ -133,7 +133,7 @@ def build_code_prompt(base64_comp, filename, user_request=None):
         prompt.append({"type": "text", "text": f"You are going to be a masterful coder, and provide new code for {filename}."})
 
         if user_request is not None:
-                prompt.append({"type": "text", "text": f"Accordingly, please review the following suggestions from a UX and React expert colleague, and implement them as described:\n {user_request}"})
+                prompt.append({"type": "text", "text": f"Accordingly, please review the following suggestions from an expert colleague, and implement them as described:\n {user_request}"})
 
         return prompt
 
@@ -145,7 +145,7 @@ def build_new_instruct_prompt(base64_comp, filename, user_request=None):
             prompt.append({"type": "text", "text": f"We need help!\nOur design for {filename} is based on this UI Composite image:"})
             prompt.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_comp}"}})
 
-        prompt.append({"type": "text", "text": f"Provide detailed instructions for an expert React coder to implement {filename}. You will be attentive to ensuring coder is aware of all the necessary pieces, but you will not write the component directly for coder. Instead you will logically work through how props and state should work, what callback methods are required, thinking through how the page or component fits within it's broader context. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about the intended structure of the file itself."})
+        prompt.append({"type": "text", "text": f"Provide detailed instructions for an expert coder to implement {filename}. You will be attentive to ensuring coder is aware of all the necessary pieces, but you will not write the component directly for coder. Instead you will logically work through how props and state should work, what callback methods are required, thinking through how the page or component fits within it's broader context. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about the intended structure of the file itself."})
 
         if user_request is not None:
                 prompt.append({"type": "text", "text": f"Specifically, {user_request}"})
@@ -155,7 +155,7 @@ def build_new_instruct_prompt(base64_comp, filename, user_request=None):
 def build_error_instruct_prompt(filename, current_code_contents=None, user_request=None):
         prompt = [
                 {"type": "text", "text": f"We need help!\nSomething is wrong with {filename}, we are seeing a failure in the npm build output."},
-                {"type": "text", "text": f"Provide detailed instructions for an expert React coder to implement fixes required for {filename}. You will be attentive to ensuring coder is aware of all the necessary pieces, but you will not write the component directly for coder. Instead you will logically work through each error and how to approach a fix for each, thinking through how the page or component fits within it's broader context. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about how to alter the file itself.  If the issue is that the app can't resolve a css file, remove the reference to that file."},
+                {"type": "text", "text": f"Provide detailed instructions for an expert coder to implement fixes required for {filename}. You will be attentive to ensuring coder is aware of all the necessary pieces, but you will not write the component directly for coder. Instead you will logically work through each error and how to approach a fix for each, thinking through how the page or component fits within it's broader context. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about how to alter the file itself.  If the issue is that the app can't resolve a css file, remove the reference to that file."},
         ]
 
         if user_request is not None:
@@ -174,7 +174,7 @@ def build_error_code_prompt(filename, compilation_errors, current_code_contents=
         ]
 
         if user_request is not None:
-                prompt.append({"type": "text", "text": f"Accordingly, please review the following suggestions from a React expert colleague, and implement them as described:\n {user_request}"})
+                prompt.append({"type": "text", "text": f"Accordingly, please review the following suggestions from an expert colleague, and implement them as described:\n {user_request}"})
         
         if current_code_contents is not None:
                 prompt.append({"type": "text", "text": f"Current contents of {filename} is: \n\n{current_code_contents}\n[EOF]\n\n"})
@@ -185,7 +185,7 @@ def build_error_code_prompt(filename, compilation_errors, current_code_contents=
 def build_update_instruct_prompt(filename, current_code_contents=None, user_request=None, base64_screen=None):
         prompt = [
                 {"type": "text", "text": f"We need help!\nWe are working to improve {filename}, we need to update it."},
-                {"type": "text", "text": f"Provide detailed instructions for an expert React coder to implement updates required for {filename}. You will be attentive to ensuring coder is aware of all the necessary pieces, but you will not write the component directly for coder. Instead you will logically work through each error and how to approach a fix for each, thinking through how the page or component fits within it's broader context. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about the intended structure of the file itself."},
+                {"type": "text", "text": f"Provide detailed instructions for an expert coder to implement updates required for {filename}. You will be attentive to ensuring coder is aware of all the necessary pieces, but you will not write the component directly for coder. Instead you will logically work through each error and how to approach a fix for each, thinking through how the page or component fits within it's broader context. Your output will be passed directly to the coder as instructions, so please address the coder directly as 'you' and say please and thank you. The coder is an LLM and does not need to be instructed to open files or use an IDE. Simply instruct about the intended structure of the file itself."},
         ]
 
         if user_request is not None:
@@ -209,7 +209,7 @@ def build_update_code_prompt(filename, current_code_contents=None, user_request=
         ]
 
         if user_request is not None:
-                prompt.append({"type": "text", "text": f"Accordingly, please review the following suggestions from a React expert colleague, and implement them as described:\n {user_request}"})
+                prompt.append({"type": "text", "text": f"Accordingly, please review the following suggestions from an expert colleague, and implement them as described:\n {user_request}"})
         
         if current_code_contents is not None:
                 prompt.append({"type": "text", "text": f"Current contents of {filename} is: \n\n{current_code_contents}\n[EOF]\n\n"})
@@ -220,7 +220,7 @@ def build_orchestrator_prompt(base64_screen, screenshot_url, base64_comp, comp_p
         prompt = []
 
         if base64_screen is not None:
-            prompt.append({"type": "text", "text": f"Examine the current output of the React code for screenshot_url: {screenshot_url} :"})
+            prompt.append({"type": "text", "text": f"Examine the current screenshot of the running code at screenshot_url: {screenshot_url} :"})
             prompt.append({
                 "type": "image_url",
                 "image_url": {

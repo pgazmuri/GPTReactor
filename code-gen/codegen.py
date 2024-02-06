@@ -12,9 +12,9 @@ def validate_complete(file_contents):
     print("\nChecking file completion:\n\n")
 
     user_content = [
-                    {"type": "text", "text": f"It is essential for humanity to know whether a file is a complete code file or not. A file with content that indicates 'rest of file remains unchanged' or 'existing components here', etc... will NOT be considered a complete file. A file whose content looks like it is meant to be merged with existing code is not a complete file. Is this file content representative of a complete file? Answer yes or no only. Do not answer anything but a single word, yes or no. Is this file complete? :\n{file_contents}"}
+                    {"type": "text", "text": f"It is essential for us to know whether a file is a complete code file or not. A file with content that indicates 'rest of file remains unchanged' or 'existing components here', etc... will NOT be considered a complete file. A file whose content looks like it is meant to be merged with existing code is not a complete file. Is this file content representative of a complete file? Answer yes or no only. Do not answer anything but a single word, yes or no. Is this file complete? :\n{file_contents}"}
                 ]
-    response = call_gpt("Assistant is an AI specialized expert coder and interpreter of React UI in TypeScript.",
+    response = call_gpt("Assistant is an AI specialized expert coder.",
                         user_content,
                         max_tokens=1, temperature=0.1, top_p=.1)
     
@@ -38,7 +38,7 @@ def merge_contents(file_contents, existing_file_path, previous_instructions):
                     {"type": "text", "text": f"A coding assistant was prompted with the following intructions to alter a file: {previous_instructions} [END PREVIOUS INSTRUCTIONS]. Following these instructions, coding assistant suggested the following file update:\n{file_contents}\n[END FILE]\n\nPlease accurately merge it with the existing file contents:{existing_file_contents}\n[END FILE]\n\nPlease merge the two files and return the resulting file contents only. Take care to consider file structure and syntax to ensure the merged file is coherent. Maintain the original intent of the previous instructions when merging. Do not respond with anything except for the merged file content."}
                 ]
 
-    response = call_gpt("Assistant is an AI specialized expert coder and interpreter of React UI in TypeScript. Assistant is meticulous and will not make mistakes. Assistant is most skilled at merging code into existing files. Assistant always responds with only the merged file content, and merged file content only. Assistant follows the instructions in code comments indicating how to merge the new content.",
+    response = call_gpt("Assistant is an AI specialized expert coder. Assistant is meticulous and will not make mistakes. Assistant is most skilled at merging code into existing files. Assistant always responds with only the merged file content, and merged file content only. Assistant follows the instructions in code comments indicating how to merge the new content.",
                         user_content,
                         max_tokens=4092, temperature=0.2, top_p=.5)
     
@@ -80,7 +80,7 @@ def choose_relevant_files(user_request, npm_build_output=None):
     if npm_build_output:
         user_content.append({"type": "text", "text": f"\n\nThe npm build output is:\n{npm_build_output}"})
 
-    response = call_gpt(f"Assistant is an AI specialized expert coder and interpreter of React UI in TypeScript. Assistant is meticulous and will not make mistakes. Assistant is most skilled at determining which files are relevant for a given task. Assistant will include any files with errors, unless the files are so numerous that the error lies in a more central location. Assistant will make a best guess as to what files are appropriate to include. Assistant always responds with only a list of file paths, and list of filepaths only.",
+    response = call_gpt(f"Assistant is an AI specialized expert coder. Assistant is meticulous and will not make mistakes. Assistant is most skilled at determining which files are relevant for a given task. Assistant will include any files with errors, unless the files are so numerous that the error lies in a more central location. Assistant will make a best guess as to what files are appropriate to include. Assistant always responds with only a list of file paths, and list of filepaths only.",
                         user_content,
                         4092,
                         0.3,

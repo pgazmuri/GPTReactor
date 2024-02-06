@@ -40,7 +40,7 @@ if not args.skip_instruct:
 else:
   instructions = args.user_request
 
-system_prompt = build_system_prompt("prompt_base.txt", instructions, code_errors) 
+system_prompt = build_system_prompt("prompt_coder.txt", instructions, code_errors) 
 code_contents = code_contents if code_contents not in system_prompt else None
 user_prompt = build_error_code_prompt(args.code_path, code_contents, instructions)
 

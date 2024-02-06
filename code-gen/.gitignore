@@ -1,5 +1,8 @@
 
-config.json
+
 
 /working/*
 config_openai.json
+config_local.json
+config_azureopenai.json
+config.json

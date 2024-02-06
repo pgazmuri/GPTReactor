@@ -6,18 +6,20 @@ from build_prompt import build_orchestrator_prompt, build_system_prompt
 from cg_utilities import call_gpt, display_response, encode_image, filter_command_output, get_npm_errors, strip_content, take_and_encode_screenshot
 import argparse
 import re
-import os
+import json
 from codegen import validate_complete, merge_contents
-
-
 
 # Parse command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--user_request", default="Your default user request")
 parser.add_argument("--comp_path", required=False, help="Path to the composite image")
 parser.add_argument("--screenshot_url", required=False, help="URL for taking the screenshot")
+parser.add_argument("--skip_confirm", action='store_true', help="Skip confirmation before executing the orchestrated commands")
 args = parser.parse_args()
-  
+
+with open('cgconfig.json') as config_file:
+    config = json.load(config_file)
+
 npm_build_output = get_npm_errors()
 taskmaker_system_prompt = build_system_prompt("prompt_orchestrator.txt", args.user_request, npm_build_output)
 
@@ -58,22 +60,24 @@ else:
   print("Error: No file content found in response.")
   sys.exit(1)
 
-# Ask user to validate execution
-#validate_execution = input("Continue? (y/n): ")
-#if validate_execution.lower() != 'y':
-#  sys.exit(0)
-
 # Ensure the directory exists
 working_dir_name = './working'
 if not os.path.exists(working_dir_name):
   os.makedirs(working_dir_name)
+
+
+# Replace "yarn add ..." lines in file_content and wrap with "(cd ../web-app && yarn add ...)"
+file_content = re.sub(r"yarn add .*", r"(cd " + config["root_dir"] + r" && \g<0>)", file_content)
 
 # Write the commands to a new PowerShell script
 with open(os.path.join(working_dir_name, 'command.ps1'), 'w') as file:
   file.write(file_content)
 
 # Ask user if they wish to execute the orchestration command
-execute_orchestration = input("Do you wish to execute the orchestration command? (y/n): ")
+if not args.skip_confirm:
+  execute_orchestration = input("Do you wish to execute the orchestration command? (y/n): ")
+else:
+  execute_orchestration = 'y'
 
 if execute_orchestration.lower() == 'y':
   # Run the PowerShell script
@@ -114,10 +118,18 @@ else:
   print("Error: No file content found in response.")
   sys.exit(1)
 
-# Ask user to validate execution
-#validate_execution = input("Continue? (y/n): ")
-#if validate_execution.lower() != 'y':
-#  sys.exit(0)
+
+# Replace "yarn add ..." lines in file_content and wrap with "(cd ../web-app && yarn add ...)"
+file_content = re.sub(r"yarn add .*", r"(cd " + config["root_dir"] + r" && \g<0>)", file_content)
+
+# Write the commands to a new PowerShell script
+with open('./working/command.ps1', 'w') as file:
+  file.write(file_content)
+
+# Run the PowerShell script
+command_output = os.system('powershell.exe -File ./working/command.ps1 > ./working/error_fix_commandoutput.txt')
+print("Execution completed. Error fixing command output written to ./working/error_fix_commandoutput.txt.")
+
 
 # Write the commands to a new PowerShell script
 with open('./working/command.ps1', 'w') as file:
