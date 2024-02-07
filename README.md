@@ -41,7 +41,7 @@ yarn install
 npm run dev
 ```
 
-GPTReactor's basic empty web application should now be running. You can view the application by opening your web browser and navigating to the URL provided in your terminal. Next, we will setup the python code-gen project.
+GPTReactor's basic empty web application should now be running. You can view the application by opening your web browser and navigating to the URL provided in your terminal. It's recommended to leave the app running while using GPTReactor. Next, we will setup the python code-gen project.
 
 Open a second terminal and navigate to the GPTReactor/code-gen directory. Run the following command to install the Python dependencies:
 
@@ -86,18 +86,20 @@ Each File-level action utilizes extensive prompts and multiple GPT calls. Releva
 
 ## GPTReactor Calls
 
-Each action internally triggers multiple GPT calls:
+Each file-level action internally triggers multiple GPT calls:
 
-1. The first call identifies what file(s) contents should be included in the “instruct” call prompt.
-2. The next call is the “instruction” call, which provides a detailed set of steps to alter a given file.
-3. The next call identifies what file(s) contents should be included in the “code” call prompt.
-4. The next call is the “code” call, which follows the detailed set of steps output from the instruct call.
-5. A fourth call validates whether the output from call 2 is a complete file, or needs to be merged with the file on disk.
-6. If step 5 determines that we need to merge, we pass the existing and updated file contents to a final call to merge the file contents.
+1. The first call prompts GPT to identify which file(s) contents should be included in the “instruct” call prompt, given the user_request and a listing of availble code files.
+2. The next call is the “instruct” call, prompting GPT to provide a detailed set of steps to alter a given file, given a set of available commands. This call is run at a high temperature for creativity.
+3. The next call again prompts GPT to identify which file(s) contents should be included in the “code” call prompt, based on the instructions retrieved in step 2 and a listing of available code files.
+4. The next call is the “code” call, which is prompted to generate code based on the instructions retrieved in step 2. This call is run at a low temperature to provide higher quality and consistent code.
+5. A fourth call prompts GPT to validate whether the output from the "code" call is a complete file, or needs to be merged with the file on disk.
+6. If step 5 determines that we need to merge, we pass the existing and updated file contents to a final call, prompting GPT to output merged file contents. These contents are then written to disk at the code_path provided.
 
 ## Orchestrator Script
 
 The `cg_orchestrate_update.py` script in GPTReactor coordinates changes across multiple files. It first builds a prompt for the GPT model using various inputs such as a --screenshot_url (optional), a --comp_path (UI mockup - optional), a --user_request, and typescript build output of the current web-app code base. The prompt is then sent to the GPT model, which returns a set of instructions. These instructions are parsed and filtered to extract the commands provided by the GPT model. These commands, once confirmed by the user, are then executed to perform the necessary updates to the files (pass --skip_confirm if you wish to skip confirmation). If you do not provide a --screenshot_url or --comp_path, the vision model will not be used.
+
+Note: The web app must be running for --screenshot_url argument to work properly.
 
 If there are any errors in the typescript build output after the command execution, the script builds a new orchestrator prompt that includes a request to fix the errors. This prompt is sent to the GPT model, which returns a set of instructions to fix the errors.
 
@@ -121,7 +123,7 @@ As you can see, the form matches the comp relatively closely, but is not a perfe
 
 If successful, submitting the registration form and then going to the home page, you should see your name displayed, showing that redux store integration was completed as part of the task.
 
-If you want to update the page after it's created (replace the screenshot url with your currently running dev url):
+If you want to update the page after it's created, you can pass a screenshot_url to "show" GPT what the current code is displaying (replace the --screenshot_url argument with your currently running dev url):
 
 ```bash
 python cg_orchestrate_update.py --user_request "Update the user registration page to ensure the form is left aligned and to better match the comp" --comp_path ./examples/user_registration.png --screenshot_url http://localhost:5173/register
