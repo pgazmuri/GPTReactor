@@ -1,6 +1,6 @@
 # GPTReactor Project
 
-GPTReactor is a demonstration project that uses GPT4 Turbo (with or without Vision) to generate a React UI from natural language instructions and images. The project aims to explore the potential of AI in automating and simplifying the process of building user interfaces. The project supports the OpenAI API via Azure OpenAI, or direct to OpenAI. Using Azure OpenAI generally allows for higher quota/throughput. You may also use any local llms that support the OpenAI api format.
+GPTReactor is a demonstration project that uses GPT4 Turbo (with or without Vision) to evolve a React UI using natural language instructions and images. The project aims to explore the potential of AI in automating and simplifying the process of building user interfaces. The project supports the OpenAI API via Azure OpenAI, or direct to OpenAI. Using Azure OpenAI generally allows for higher quota/throughput. It also works with any local/open source llms accesible via the OpenAI API format.
 
 There are two top folders in the repository: /code-gen and /web-app. /web-app contains a React project, a simple web app built using Vite using React + Typescript using SWC (superfast web compiler). /code-gen contains python scripts that can be used to alter that React web app code with GPT. 
 
@@ -13,33 +13,33 @@ There are two top folders in the repository: /code-gen and /web-app. /web-app co
 
 2. Install Yarn, a package manager for your code. You can install Yarn globally on your system using the following command in your terminal:
 
-    ```bash
-    npm install --global yarn
-    ```
+```bash
+npm install --global yarn
+```
 
 3. Clone the GPTReactor project from GitHub:
 
-    ```bash
-    git clone https://github.com/pgazmuri/GPTReactor
-    ```
+```bash
+git clone https://github.com/pgazmuri/GPTReactor
+```
 
 4. Navigate to the `/web-app` directory in the GPTReactor project:
 
-    ```bash
-    cd GPTReactor/web-app
-    ```
+```bash
+cd GPTReactor/web-app
+```
 
 5. Install the web project dependencies:
 
-    ```bash
-    yarn install
-    ```
+```bash
+yarn install
+```
 
 6. Start the web project:
 
-    ```bash
-    npm run dev
-    ```
+```bash
+npm run dev
+```
 
 GPTReactor's basic empty web application should now be running. You can view the application by opening your web browser and navigating to the URL provided in your terminal. Next, we will setup the python code-gen project.
 
@@ -82,11 +82,11 @@ GPTReactor uses a collection of Python scripts in /code-gen to perform various a
 - **Component/File Update**: cg_update_fix.py action updates a component or file as per the user's request.
 - **Comparison/Update**: cg_comparison_fix.py action compares code output to a UI comp and updates the component file to match the comp more accurately.
 
-Each File-level action utilizes both shared (system) and unique (user) prompts. Relevant stack information is included and injected into prompts to provide the model with grounding and context, enabling it to perform the task correctly using the current stack's conventions. The prompts are in text files called "prompt_coder", "prompt_orchestrator", and "prompt_taskmaker", where they can be further customized to reflect the software stack. A file called cgconfig.json contains details about the web-app project that is useful in helping us inject the right filepaths and file contents into the prompts.
+Each File-level action utilizes extensive prompts and multiple GPT calls. Relevant stack information is included and injected into prompts to provide the model with grounding and context, enabling it to perform the task correctly using the current stack's conventions. The prompts are in text files called "prompt_coder", "prompt_orchestrator", and "prompt_taskmaker", where they can be further customized to reflect the software stack. A file called cgconfig.json contains details about the web-app project that is useful in helping us inject the right filepaths and file contents into the prompts.
 
 ## GPTReactor Calls
 
-Each action internally triggers multiple GenAI calls:
+Each action internally triggers multiple GPT calls:
 
 1. The first call identifies what file(s) contents should be included in the “instruct” call prompt.
 2. The next call is the “instruction” call, which provides a detailed set of steps to alter a given file.
@@ -97,7 +97,7 @@ Each action internally triggers multiple GenAI calls:
 
 ## Orchestrator Script
 
-The `cg_orchestrate_update.py` script in GPTReactor coordinates changes across multiple files. It first builds a prompt for the GPT model using various inputs such as a screenshot (optional), a comp (UI mockup) path (optional), a user request, and typescript build output. The prompt is then sent to the GPT model, which returns a set of instructions. These instructions are parsed and filtered to extract the commands provided by the GPT model. These commands, once confirmed by the user, are then executed to perform the necessary updates to the files (pass --skip_confirm if you wish). If you do not provide a screenshot_url or comp_path, the vision model will not be used.
+The `cg_orchestrate_update.py` script in GPTReactor coordinates changes across multiple files. It first builds a prompt for the GPT model using various inputs such as a --screenshot_url (optional), a --comp_path (UI mockup - optional), a --user_request, and typescript build output of the current web-app code base. The prompt is then sent to the GPT model, which returns a set of instructions. These instructions are parsed and filtered to extract the commands provided by the GPT model. These commands, once confirmed by the user, are then executed to perform the necessary updates to the files (pass --skip_confirm if you wish to skip confirmation). If you do not provide a --screenshot_url or --comp_path, the vision model will not be used.
 
 If there are any errors in the typescript build output after the command execution, the script builds a new orchestrator prompt that includes a request to fix the errors. This prompt is sent to the GPT model, which returns a set of instructions to fix the errors.
 
@@ -150,9 +150,8 @@ python ./cg_update_fix.py --user_request "Add a new sidebar item for the Reports
 If the output still needs improvement (and it often does):
 
 ```bash
-python cg_orchestrate_update.py --user_request "Update the report page to better match the comp. use or improve the mock data in reportstore." --comp_path ./examples/report.png --screenshot_url http://localhost:5173/reports
+python cg_orchestrate_update.py --user_request "Update the report page to better match the comp. update the mock data in reportstore if needed." --comp_path ./examples/report.png --screenshot_url http://localhost:5173/reports
 ```
-
 Again, be sure to replace the screenshot url with your currently running dev url.
 
 The output from one run of this command, followed by a few rounds of update commands, yielded the following UI:
@@ -171,15 +170,16 @@ Though it would help, this call doesn’t need to include details about compile 
 
 Why didn't you use LangChan/Semantic Kernel/Prompt Flow, etc...?
 
-I intentionally wanted the python code to be as simple as possible for transparency/ease of understanding by React devs and others not familiar with these frameworks. I myself am not particularly familiar with python and it's conventions, but chose python as it's the default stack for AI, benefiting from the most comprehensive ecosystem while keeping the solution 'agnostic' in terms of potential stacks and languages that it can operate against. Consequently, the current set of scripts could be easily ported to Typescript to better fit within the React ecosystem.
+I intentionally wanted the python code to be as simple as possible for transparency/ease of understanding by React devs and others not familiar with these frameworks. I myself am not particularly familiar with python and it's conventions, but chose python as it's the default stack for AI, benefiting from the most comprehensive ecosystem while keeping the solution 'agnostic' in terms of potential stacks and languages that it can operate against. Consequently, the current set of scripts could be easily ported to Typescript to better fit within the React ecosystem. That said, there is plenty of room for improvement, as not much thought has gone into architecture, this project is an exploration and demonstration, not a production system. I welcome input from the community here.
 
 ## Future Work
-This demonstration project is just that, a demonstration. GPT compute is sufficiently expensive that performing proper evaluation at scale to validate improvements is cost prohibitive. At the same time, there is plenty of low-hanging fruit in terms of potential improvements and optimizations. If there is any interest in further refining this tool, I would recommend:
+This demonstration project is just that, a demonstration. GPT compute is sufficiently expensive that performing proper evaluation at scale to validate improvements is cost prohibitive. At the same time, there is plenty of low-hanging fruit in terms of potential improvements and optimizations. If you are willing to try this tool, I want to hear from you! The more feedback I can get, the more people experiment with improved prompts, the faster we can improve the capabilities of GPTReactor. If there is any interest in further refining this tool, I would recommend:
 
+* Improve prompts with additional examples ⬅️ low hanging fruit 🍇🍊🍋
 * Improve logging and error handling
 * Clean up console output to be more useful
-* Improve prompts with additional examples
 * Set up an evaluation pipeline to properly evaluate prompt effectiveness (this is costly)
 * Generally test various use cases and review completions to understand failure modes and potential mitigations
 * Generally improve the base React app stack to include a more complete set of non-functional and cross-functional conventions/libraries
-* Extend to support full stack integration of some kind
+* Extend to support full stack integration of some kind, make more configurable and test against other stacks/languages
+* Rearchitect entirely fronm the ground up based on everything learned 😀
