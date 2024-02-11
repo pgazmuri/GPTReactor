@@ -239,7 +239,7 @@ def build_orchestrator_prompt(base64_screen, screenshot_url, base64_comp, comp_p
                 prompt.append({"type": "text", "text": f"We need help!\nWe are working to improve this code base, it surely needs work, and you are the right person for the job. Specifically, {user_request}"})
 
         
-        prompt.append({"type": "text", "text": f"You know about the context here, all the filenames and the relevant file contents of our stack. Start by analyzing relevant parts of the code base or code files and provide a high level overview of any issues or steps relevant to the request that you see. Then you will logically work through each issue or step and how to approach a fix or implementation for each based on the instruction set provided. \n\nCurrent typescript build output:\n\n{npm_build_output}\n\n[END NPM OUTPUT]\n"})
+        prompt.append({"type": "text", "text": f"You know about the context here, all the filenames and the relevant file contents of our stack. Asnwer using the GPTReactorProtocol. \n\nCurrent typescript build output:\n\n{npm_build_output}\n\n[END NPM OUTPUT]\n"})
         
         prompt.append({"type": "text", "text": f"Finally, output the specific actions as bash script invoking only the allowed commands. Provide detailed instructions within user_request arguments."});
 

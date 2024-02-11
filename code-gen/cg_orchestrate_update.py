@@ -49,8 +49,8 @@ extract_regex = r'```(?:[Pp]owershell|[Bb]ash)\n(.*?)\n```'
 # Find all the commands
 matches = re.findall(extract_regex, response_content, re.DOTALL)
 
-# Combine all matches into a single string
-file_content = '\n'.join(matches)
+# Get the last match
+file_content = matches[-1] if matches else ''
 
 if file_content:
   print(f"Parsed File from GPT output:\n\n{file_content}\n\n")
@@ -112,8 +112,8 @@ response_content = response.choices[0].message.content
 # Find all the commands
 matches = re.findall(extract_regex, response_content, re.DOTALL)
 
-# Combine all matches into a single string
-file_content = '\n'.join(matches)
+# Get the last match
+file_content = matches[-1] if matches else ''
 
 if file_content:
   print(f"Parsed File from GPT output:\n\n{file_content}\n\n")

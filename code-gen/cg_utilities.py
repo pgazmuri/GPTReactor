@@ -232,9 +232,13 @@ if __name__ == '__main__':
 
 def display_response(response):
     print(response.choices[0].message.content)
-    print(f"\n{response.usage.prompt_tokens} Prompt Tokens used")
-    print(f"{response.usage.completion_tokens} Completion Tokens used")
-    print(f"{response.usage.total_tokens} Total Tokens used")
+    if response.usage is not None:
+        if response.usage.prompt_tokens is not None:
+            print(f"\n{response.usage.prompt_tokens} Prompt Tokens used")
+        if response.usage.completion_tokens is not None:
+            print(f"{response.usage.completion_tokens} Completion Tokens used")
+        if response.usage.total_tokens is not None:
+            print(f"{response.usage.total_tokens} Total Tokens used")
 
     # Function to encode the image
 def encode_image(image_path):
